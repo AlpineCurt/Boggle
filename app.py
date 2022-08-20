@@ -12,12 +12,23 @@ debug = DebugToolbarExtension(app)
 
 @app.route("/")
 def home_page():
-
     if 'game_board' in session:
         board = session['game_board']
     else:
-        game = Boggle()
-        board = game.make_board()
+        board = boggle_game.make_board()
         session['game_board'] = board
-
     return render_template('boggle.html', board=board)
+
+@app.route("/word-check")
+def word_check():
+    response = {'result' : ""}
+    
+    if len(request.args) == 0:
+        return jsonify(response)
+    
+    word = request.args['word']
+    board = session['game_board']
+
+    response['result'] = boggle_game.check_valid_word(board, word)
+
+    return jsonify(response)
