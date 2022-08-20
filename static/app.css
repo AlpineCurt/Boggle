@@ -1,0 +1,10 @@
+table {
+    border: 1px solid;
+    border-color: black;
+    table-layout: fixed;
+}
+
+td {
+    font-size: 30px;
+    padding: 7px;
+}
