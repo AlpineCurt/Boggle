@@ -19,8 +19,13 @@
     </table>
 </div>
 <br>
-<form action="">
-    <input type="text" name="guess" placeholder="Enter a word">
+<span>Score: </span><span id="score">0</span><span id="messages"></span>
+<br><br>
+<form action="/word-check" method="GET">
+    <input type="text" id="word_guess" name="guess" placeholder="Enter a word">
     <button>Submit</button>
 </form>
+<div id="found_words">
+    <ul></ul>
+</div>
 {% endblock %}
