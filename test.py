@@ -53,7 +53,12 @@ class FlaskTests(TestCase):
             
             # Valid word on board
             res1 = client.get("/word-check?word=ship")
-            data1 = res1.get_data(as_text=True)
+            
+            datax = res1.json
+            data1 = res1.get_data()
+            print("datax: ", datax)
+            import pdb
+            pdb.set_trace()
             self.assertIn("result", data1)
             self.assertIn("ok", data1)
             self.assertNotIn("not-a-word", data1)

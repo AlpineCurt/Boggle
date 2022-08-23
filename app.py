@@ -1,3 +1,4 @@
+from crypt import methods
 from boggle import Boggle
 from flask import Flask, session, request, render_template, redirect, flash, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
@@ -17,11 +18,18 @@ def home_page():
     else:
         board = boggle_game.make_board()
         session['game_board'] = board
+    if 'games_played' in session:
+        session['games_played'] += 1
+    else:
+        session['games_played'] = 0
+    if 'high_score' not in session:
+        session['high_score'] = 0
     return render_template('boggle.html', board=board)
 
 @app.route("/word-check")
 def word_check():
     response = {'result' : ""}
+    print("response: ", response)
     
     if len(request.args) == 0:
         return jsonify(response)
@@ -32,3 +40,12 @@ def word_check():
     response['result'] = boggle_game.check_valid_word(board, word)
 
     return jsonify(response)
+
+@app.route("/submit-score", methods=["POST"])
+def submit_score():
+    new_score = request.json["score"]
+    if new_score > session['high_score']:
+        session['high_score'] = new_score
+    session['games_played'] += 1
+    import pdb
+    pdb.set_trace()

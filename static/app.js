@@ -2,6 +2,7 @@ let guess = '';
 let result = '';
 let wordList = new Set();
 let score = 0;
+let inProgress = true;
 
 const $messages = $('#messages');
 const $score = $('#score');
@@ -32,18 +33,25 @@ function updateUI() {
             $foundWords.append(newWord);
             wordList.add(guess);
             console.log(`wordList: ${wordList}`);
+            $messages.text("");
         }
     } else if (result === 'not-on-board') {
-        $messages.text("Word not on board!")
+        $messages.text("Word not on board!");
     } else if (result === 'not-a-word') {
-        $messages.text("That's not a valid word!")
+        $messages.text("That's not a valid word!");
     }
 }
 
 $("form").on("submit", async function(evt) {
     evt.preventDefault();
+    if (!inProgress) return;
     guess = $("#word_guess").val();
     result = await BoggleGame.word_check(guess);
-    console.log(result);
+    //console.log(result);
     updateUI(result);
 })
+
+setTimeout(() => {
+    inProgress = false;
+    axios.post(`/submit-score`, { 'score': score });
+}, 60000);
